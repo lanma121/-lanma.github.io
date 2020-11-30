@@ -1,0 +1,19 @@
+sudo: false
+language: node_js
+node_js:
+  - 10 # use nodejs v10 LTS
+cache: npm
+branches:
+  only:
+    - butterfly # build master branch only
+script:
+  - hexo generate # generate static files
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: 983cda7ff384d0514e7f44bcf18c8c6b2e808ab1
+  keep-history: true
+  on:
+    branch: butterfly
+  local-dir: public
+  
