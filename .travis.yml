@@ -11,7 +11,7 @@ script:
 deploy:
   provider: pages
   skip-cleanup: true
-  github-token: 983cda7ff384d0514e7f44bcf18c8c6b2e808ab1
+  github-token: $GH_TOKEN
   keep-history: true
   on:
     branch: butterfly
