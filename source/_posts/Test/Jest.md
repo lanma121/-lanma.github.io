@@ -2,7 +2,7 @@
 ---
 title: Jest 简介
 date: 2021-01-05 15:49:28
-tags: test, jest
+tags: test
 description: " test, react, jest "
 ---
 
