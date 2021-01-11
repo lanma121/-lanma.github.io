@@ -2,7 +2,7 @@
 ---
 title:  React 测试技巧实例
 date: 2021-01-05 17:49:28
-tags: react, test
+tags: test
 description: " react 测试模式实例 "
 ---
 
