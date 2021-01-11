@@ -2,7 +2,7 @@
 ---
 title: React test library
 date: 2021-01-05 16:49:28
-tags: test, react
+tags: test
 description: " react test library"
 ---
 
