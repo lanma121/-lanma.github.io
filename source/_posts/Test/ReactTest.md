@@ -2,7 +2,7 @@
 ---
 title: React Test
 date: 2021-01-05 14:49:28
-tags: react, test
+tags: test
 description: " React test"
 ---
 
