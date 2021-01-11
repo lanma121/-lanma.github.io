@@ -6,10 +6,79 @@ tags: react, test
 description: " react 测试模式实例 "
 ---
 
+## Test Utilities 库
+-  `isElement()`
+    当  `element`  是任何一种 React 元素时，返回  `true`。
+
+- [`isElementOfType(element, componentClass)`](https://react.docschina.org/docs/test-utils.html#iselementoftype)
+  当  `element`  是一种 React 元素，并且它的类型是参数  `componentClass`  的类型时，返回  `true`。
+
+- [`isDOMComponent(instance)`](https://react.docschina.org/docs/test-utils.html#isdomcomponent)
+ 当  `instance`  是一个 DOM 组件（比如  `<div>`  或  `<span>`）时，返回  `true`。
+
+- [`isCompositeComponent(instance)`](https://react.docschina.org/docs/test-utils.html#iscompositecomponent)
+当  `instance`  是一个用户自定义的组件，比如一个类或者一个函数时，返回  `true`。
+
+- [`isCompositeComponentWithType(instance, componentClass)`](https://react.docschina.org/docs/test-utils.html#iscompositecomponentwithtype)
+ 当  `instance`  是一个组件，并且它的类型是参数  `componentClass`  的类型时，返回  `true`。
+
+----------
+- [`findAllInRenderedTree(tree,test)`](https://react.docschina.org/docs/test-utils.html#findallinrenderedtree)
+遍历所有在参数  `tree`  中的组件，记录所有  `test(component)`  为  `true`  的组件。单独调用此方法不是很有用，但是它常常被作为底层 API 被其他测试方法使用。
+
+- [`scryRenderedDOMComponentsWithClass(tree,className)`](https://react.docschina.org/docs/test-utils.html#scryrendereddomcomponentswithclass)
+查找渲染树中组件的所有 DOM 元素，这些组件是 css 类名与参数  `className`  匹配的 DOM 组件。
+
+- [findRenderedDOMComponentWithClass(tree, className)](https://react.docschina.org/docs/test-utils.html#findrendereddomcomponentwithclass)
+用法与  [`scryRenderedDOMComponentsWithClass()`](https://react.docschina.org/docs/test-utils.html#scryrendereddomcomponentswithclass)  保持一致，但期望仅返回一个结果。不符合预期的情况下会抛出异常。
+
+- [scryRenderedDOMComponentsWithTag(tree,tagName)](https://react.docschina.org/docs/test-utils.html#scryrendereddomcomponentswithtag)
+查找渲染树中组件的所有的 DOM 元素，这些组件是标记名与参数  `tagName`  匹配的 DOM 组件。
+
+- [`findRenderedDOMComponentWithTag(tree,tagName)`](https://react.docschina.org/docs/test-utils.html#findrendereddomcomponentwithtag)
+用法与  [`scryRenderedDOMComponentsWithTag()`](https://react.docschina.org/docs/test-utils.html#scryrendereddomcomponentswithtag)  保持一致，但期望仅返回一个结果。不符合预期的情况下会抛出异常。
+
+-  [scryRenderedComponentsWithType(tree,componentClass)](https://react.docschina.org/docs/test-utils.html#scryrenderedcomponentswithtype)
+查找组件类型等于  `componentClass`  组件的所有实例。
+
+- [`findRenderedComponentWithType(tree,  componentClass)`](https://react.docschina.org/docs/test-utils.html#findrenderedcomponentwithtype)
+用法与  [`scryRenderedComponentsWithType()`](https://react.docschina.org/docs/test-utils.html#scryrenderedcomponentswithtype)  保持一致，但期望仅返回一个结果。不符合预期的情况下会抛出异常。
+
+- [`renderIntoDocument(element)`](https://react.docschina.org/docs/test-utils.html#renderintodocument)`renderIntoDocument()`
+渲染 React 元素到 document 中的某个单独的 DOM 节点上。**这个函数需要一个 DOM 对象。**  它实际相当于：
+	```js
+	const domContainer = document.createElement('div');
+	ReactDOM.render(element, domContainer);
+	```
+> 注意：
+> 
+> 你需要在引入  `React`  **之前**确保  `window`  存在，`window.document`  和  `window.document.createElement`  能在全局环境中获取到。不然 React 会认为它没有权限去操作 DOM，以及像  `setState`  这样的方法将不可用。
+
+- Simulate.{eventName}( element,[eventData])
+使用可选的 `eventData` 事件数据来模拟在 DOM 节点上触发事件。
+	```js
+	// <input ref={(node) => this.textInput = node} />
+	const node = this.textInput;
+	node.value = 'giraffe';
+	ReactTestUtils.Simulate.change(node);
+	ReactTestUtils.Simulate.keyDown(node, {key: "Enter", keyCode: 13, which: 13});
+	```
+
 -   [创建/清理](https://react.docschina.org/docs/testing-recipes.html#setup--teardown)
 对于每个测试，即使测试失败，也需要执行清理。否则，测试可能会导致“泄漏”，并且一个测试可能会影响另一个测试的行为。比如，我们通常希望将 React 树渲染给附加到  `document`的 DOM 元素。以便它可以接收 DOM 事件。当测试结束时，我们需要“清理”并从  `document`  中卸载树。
 -   [`act()`](https://react.docschina.org/docs/testing-recipes.html#act)
-在编写 UI 测试时，可以将渲染、用户事件或数据获取等任务视为与用户界面交互的“单元”。React 提供了一个名为  `act()`  的 helper，它确保在进行任何断言之前，与这些“单元”相关的所有更新都已处理并应用于 DOM：
+act 方法能在断言之前确保因渲染、用户事件或数据获取等任务而引起的所有更新都已处理并应用于 DOM。
+
+	由react 外部调用栈引起的函数式组件变化，会显示 `act(...)`  	warning（`类组件由于被大量使用，会对遗留的代码展示太多的warning， 所以被react team 忽略掉了`）。
+这个warning 的发生是为了防止一些事情导致组件产生不期望的变化。如果需要变化，我们用act去包装，明确告诉react。这样能保证我们测试的准确性。
+
+	在react 调用栈内部跑的code引起的变化，React 会自动处理这个warning，像点击事件直接更新state。但是不能处理react  调用栈外部引起的组件变化，比如：
+	1. 异步代码完成后的更新
+	2. 使用`jest`的Timers 方法
+	3. 自定义 Hooks
+	4. 使用 `useImperativeHandle`
+	参考：[Fix the "not wrapped in act(...)" warning (kentcdodds.com)](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning)
+
 -   [渲染](https://react.docschina.org/docs/testing-recipes.html#rendering)
 测试组件对于给定的 prop 渲染是否正确。此时应考虑实现基于 prop 渲染消息的简单组件。
 -   [数据获取](https://react.docschina.org/docs/testing-recipes.html#data-fetching)
